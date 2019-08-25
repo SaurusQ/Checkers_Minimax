@@ -46,6 +46,10 @@
         "future": "cpp",
         "mutex": "cpp",
         "thread": "cpp",
-        "cstdarg": "cpp"
+        "cstdarg": "cpp",
+        "xmemory": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp"
     }
 }
