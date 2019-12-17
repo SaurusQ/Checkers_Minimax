@@ -8,16 +8,16 @@ Move::Move(uint8_t start, uint8_t end)
 
 }
 
-void Move::execute(Board* board)
+void Move::execute(uint8_t* grid)
 {
-    board->grid_[end_] = board->grid_[start_];
-    board->grid_[start_] = EMPTY;
+    grid[end_] = grid[start_];
+    grid[start_] = EMPTY;
     //TODO Recursive
 }
-void Move::undo(Board* board)
+void Move::undo(uint8_t* grid)
 {
     //TODO recursive
 
-    board->grid_[start_] = board->grid_[end_];
-    board->grid_[end_] = EMPTY;
+    grid[start_] = grid[end_];
+    grid[end_] = EMPTY;
 }
