@@ -2,72 +2,53 @@
 #include "board.hpp"
 
 Board::Board()
+    : reds_(0)
+    , blacks_(0)
 {
-    for(int x = 0; x < BOARD_SIZE; x++)
+    
+}
+
+void Board::calculateMoves(bool red)
+{
+    for(int i = 0; i < GRID_SIZE; i++)
     {
-        for(int y = 0; y < BOARD_SIZE; y++)
+        if(grid_[i] == EMPTY) continue;
+
+        if(red && (grid_[i] & IS_RED))
         {
-            grid_[x][y].setPos(Pos{x, y});
-            if(x + y % 2 && x + y < BOARD_SIZE * 3)
-            {
-                grid_[x][y].setEnemy();
-            }
-            else if(x + y % 2 && x + y < BOARD_SIZE * (BOARD_SIZE - 3))
-            {
-                grid_[x][y].setFriendly();
-            }
+            this->moveUp(i);
+            if(grid_[i] & IS_KING) this->moveDown(i);
+        }
+        else if(!red && (grid_[i] & IS_BLACK))
+        {
+            this->moveDown(i);
+            if(grid_[i] & IS_KING) this->moveUp(i);
         }
     }
 }
 
-void Board::recalculateMoves()
+void Board::moveUp(int i)
 {
-    for(int x = 0; x < BOARD_SIZE; x++)
-    {
-        for(int y = 0; y < BOARD_SIZE; y++)
-        {
+    //Can't move any more up
+    if(i < SEGMENT) return;
 
-        }
-    }
+    //Right
+    if(grid_[i - SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(i, i - SEGMENT));
+    //Left
+    if(grid_[i - 1 - SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(i, i - 1 - SEGMENT));
 }
 
-void Board::calculateMoves()
+void Board::moveDown(int i)
 {
+    //Can't move any more down
+    if(i > BOARD_SIZE - SEGMENT) return;
 
-}
-
-void Board::setSquare(const Square &square, Pos pos)
-{
-    grid_[pos.x][pos.y] = square;
-}
-
-Square* Board::getSquare(Pos pos, Dir dir, int length)
-{
-    Pos relPos;
-    switch(dir)
-    {
-        case Dir::UR:
-            relPos = Pos{length, -length};
-            break;
-        case Dir::UL:
-            relPos = Pos{-length, -length};
-            break;
-        case Dir::DR:
-            relPos = Pos{length, length};
-            break;
-        case Dir::DL:
-            relPos = Pos{-length, length};
-            break;
-        default:
-            break;
-    }
-    pos = Pos{pos.x + relPos.x, pos.y + relPos.y};
-    if(pos.x < 0 || pos.y < 0 || pos.x >= BOARD_SIZE || pos.y >= BOARD_SIZE)
-    {
-        return nullptr;
-    }
-    else
-    {
-        return &grid_[pos.x][pos.y];
-    }
+    //Left
+    if(grid_[i + SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(i, i + SEGMENT));
+    //Right
+    if(grid_[i + 1 + SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(i, i + 1 + SEGMENT));
 }
