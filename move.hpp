@@ -2,25 +2,19 @@
 #ifndef MOVE_HPP
 #define MOVE_HPP
 
-#include <string>
-
-#include "utils.hpp"
-#include "square.hpp"
-
-class Board;
+#include "board.hpp"
 
 class Move
 {
     public:
+        Move(uint8_t start, uint8_t end);
         void execute(Board *board);
         void undo(Board *board);
-
     private:
-        Pos start_;
-        Pos end_;
-        Square eatenSquare_;
-        bool hasEaten_ = false;
-        Move *nextMove = nullptr;
+        friend class Board;
+
+        uint8_t start_;
+        uint8_t end_;
 };
 
 #endif
