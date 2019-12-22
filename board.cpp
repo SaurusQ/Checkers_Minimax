@@ -24,49 +24,123 @@ Board::Board()
     }
 }
 
-void Board::calculateMoves(bool red)
+void Board::calculateMoves(int side)
 {
     for(int i = 0; i < GRID_SIZE; i++)
     {
-        if(grid_[i] == EMPTY) continue;
-
-        if(red && (grid_[i] & IS_RED))
+        //Calculate moves only for pieces on one side
+        if(grid_[i] & side)
         {
-            this->moveUp(i);
-            if(grid_[i] & IS_KING) this->moveDown(i);
-        }
-        else if(!red && (grid_[i] & IS_BLACK))
-        {
-            this->moveDown(i);
-            if(grid_[i] & IS_KING) this->moveUp(i);
+            if((grid_[i] & IS_KING) && !this->eat(i, side))             //Kings
+            {
+                this->moveUp(i);
+                this->moveDown(i);
+            }
+            else if((grid_[i] & IS_BLACK) && !this->eatDown(i, side))   //Black pawns
+            {
+                this->moveDown(i);
+            }
+            else if((grid_[i]) && !this->eatUp(i, side))                //Red pawns
+            {
+                this->moveUp(i);
+            }
         }
     }
 }
 
-void Board::moveUp(int i)
+void Board::moveUp(int idx)
 {
     //Can't move any more up
-    if(i < SEGMENT) return;
-
+    if(idx < SEGMENT) return;
+    
     //Right
-    if(grid_[i - SEGMENT] == EMPTY)
-        moves_.emplace_back(Move(i, i - SEGMENT));
+    if(grid_[idx - SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(idx, idx - SEGMENT));
     //Left
-    if(grid_[i - 1 - SEGMENT] == EMPTY)
-        moves_.emplace_back(Move(i, i - 1 - SEGMENT));
+    if(grid_[idx - 1 - SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(idx, idx - 1 - SEGMENT));
 }
 
-void Board::moveDown(int i)
+void Board::moveDown(int idx)
 {
     //Can't move any more down
-    if(i > GRID_SIZE - SEGMENT) return;
+    if(idx > GRID_SIZE - SEGMENT) return;
 
     //Left
-    if(grid_[i + SEGMENT] == EMPTY)
-        moves_.emplace_back(Move(i, i + SEGMENT));
+    if(grid_[idx + SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(idx, idx + SEGMENT));
     //Right
-    if(grid_[i + 1 + SEGMENT] == EMPTY)
-        moves_.emplace_back(Move(i, i + 1 + SEGMENT));
+    if(grid_[idx + 1 + SEGMENT] == EMPTY)
+        moves_.emplace_back(Move(idx, idx + 1 + SEGMENT));
+}
+
+bool Board::eatUp(int idx, int enemy)
+{
+    if(idx < SEGMENT * 2 + 1) return false;
+
+    //Right
+    if((grid_[idx - SEGMENT] & enemy) && (grid_[idx - SEGMENT * 2]))
+    {
+
+    }
+
+    //Left
+    if((grid_[idx - 1 - SEGMENT] & enemy) && (grid_[idx - (1 + SEGMENT) * 2]))
+    {
+
+    }
+}
+
+bool Board::eatDown(int idx, int enemy)
+{
+    if(idx > GRID_SIZE - (SEGMENT * 2 + 1)) return false;
+ 
+    //Right
+    if((grid_[idx + SEGMENT] & enemy) && (grid_[idx + SEGMENT * 2]))
+    {
+
+    }
+
+    //Left
+    if((grid_[idx + 1 + SEGMENT] & enemy) && (grid_[idx + (1 + SEGMENT) * 2]))
+    {
+        
+    }
+}
+
+bool Board::eat(int idx, int enemy)
+{
+    //Up
+    if(idx < SEGMENT * 2 + 1)
+    {
+        //Right
+        if((grid_[idx - SEGMENT] & enemy) && (grid_[idx - SEGMENT * 2]))
+        {
+
+        }
+
+        //Left
+        if((grid_[idx - 1 - SEGMENT] & enemy) && (grid_[idx - (1 + SEGMENT) * 2]))
+        {
+
+        }
+    }
+
+    //Down
+    if(idx > GRID_SIZE - (SEGMENT * 2 + 1))
+    {
+        //Right
+        if((grid_[idx + SEGMENT] & enemy) && (grid_[idx + SEGMENT * 2]))
+        {
+
+        }
+
+        //Left
+        if((grid_[idx + 1 + SEGMENT] & enemy) && (grid_[idx + (1 + SEGMENT) * 2]))
+        {
+            
+        }
+    }
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& b)
