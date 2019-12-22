@@ -2,8 +2,8 @@
 #include "board.hpp"
 
 Board::Board()
-    : reds_(0)
-    , blacks_(0)
+    : reds_(SEGMENT * 3)
+    , blacks_(SEGMENT * 3)
 {
     //Set board completely empty
     std::memset(grid_, 0, sizeof(grid_) * sizeof(grid_[0]));
@@ -35,7 +35,7 @@ void Board::calculateMoves(int side)
         {
             if(grid_[i] & IS_KING)          //Kings
             {
-                if(!this->eat(i, enemy))
+                if(!this->eat(i, i, BOTH, enemy))
                 {
                     this->moveUp(i);
                     this->moveDown(i);
@@ -43,14 +43,14 @@ void Board::calculateMoves(int side)
             }
             else if(grid_[i] & IS_BLACK)    //Black pawns
             {
-                if(!this->eatDown(i, enemy))
+                if(!this->eat(i, i, DOWN, enemy))
                 {
                     this->moveDown(i);
                 }
             }
             else if(grid_[i] & IS_RED)      //Red pawns
             {
-                if(!this->eatUp(i, enemy))
+                if(!this->eat(i, i, UP, enemy))
                 {
                     this->moveUp(i);
                 }
@@ -85,85 +85,60 @@ void Board::moveDown(int idx)
         moves_.emplace_back(Move(idx, idx + 1 + SEGMENT));
 }
 
-bool Board::eatUp(int gridIdx, int enemy, int moveIdx)
+bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector<int> vEat)
 {
-    //Can't eat up
-    if(gridIdx < SEGMENT * 2 + 1) return false;
-    
-    bool retVal = false;
+    bool eaten = false;
+    int eatIdx;
+    int moveIdx;
 
-    //Right
-    if((grid_[gridIdx - SEGMENT] & enemy) && (grid_[gridIdx - SEGMENT * 2]))
+    auto findMove = [&]()
     {
-        if(moveIdx == -1) moves_.emplace_back(Move(gridIdx, gridIdx - SEGMENT * 2, gridIdx - SEGMENT));
-        else moves_[moveIdx].continueMove(gridIdx - SEGMENT * 2, gridIdx - SEGMENT);
-        this->eatUp(gridIdx - SEGMENT * 2, enemy, moves_.size - 1);
-        retVal = true;
-    }
+        if((grid_[eatIdx] & enemy)
+            && (grid_[moveIdx] == EMPTY)
+            && (eatDir != BOTH || std::find(vEat.begin(), vEat.end(), eatIdx) == vEat.end()))
+        {       //We don't need to check old movements if the piece can move on only one direction
+            vEat.push_back(eatIdx);
+            this->eat(startIdx, moveIdx, eatDir, enemy, vEat);
+            eaten = true;
+        }
+    };
 
-    //Left
-    if((grid_[gridIdx - 1 - SEGMENT] & enemy) && (grid_[gridIdx - (1 + SEGMENT) * 2]))
-    {
-        //TODO indexes
-        if(moveIdx == -1 && !retVal) moves_.emplace_back(Move(gridIdx, gridIdx - SEGMENT * 2, gridIdx - SEGMENT));
-        else moves_[moveIdx].continueMove(gridIdx - SEGMENT * 2, gridIdx - SEGMENT);
-        this->eatUp(gridIdx - SEGMENT * 2, enemy, moves_.size - 1);
-        retVal = true;
-    }
-    return retVal;
-}
-
-bool Board::eatDown(int gridIdx, int enemy, int moveIdx)
-{
-    //Can't eat down
-    if(gridIdx > GRID_SIZE - (SEGMENT * 2 + 1)) return false;
- 
-    //Right
-    if((grid_[gridIdx + SEGMENT] & enemy) && (grid_[gridIdx + SEGMENT * 2]))
-    {
-
-    }
-
-    //Left
-    if((grid_[gridIdx + 1 + SEGMENT] & enemy) && (grid_[gridIdx + (1 + SEGMENT) * 2]))
-    {
-        
-    }
-}
-
-bool Board::eat(int gridIdx, int enemy, int moveIdx)
-{
     //Up
-    if(gridIdx < SEGMENT * 2 + 1)
+    if((eatDir == UP || eatDir == BOTH)
+        && (gridIdx < SEGMENT * 2 + 1))
     {
         //Right
-        if((grid_[gridIdx - SEGMENT] & enemy) && (grid_[gridIdx - SEGMENT * 2]))
-        {
-
-        }
+        eatIdx = gridIdx - SEGMENT;
+        moveIdx = gridIdx - SEGMENT * 2;
+        findMove();
 
         //Left
-        if((grid_[gridIdx - 1 - SEGMENT] & enemy) && (grid_[gridIdx - (1 + SEGMENT) * 2]))
-        {
-
-        }
+        eatIdx = gridIdx - (1 + SEGMENT);
+        moveIdx = gridIdx - (1 + SEGMENT) * 2;
+        findMove();
     }
 
     //Down
-    if(gridIdx > GRID_SIZE - (SEGMENT * 2 + 1))
+    if((eatDir == DOWN || eatDir == BOTH)
+        && (gridIdx > GRID_SIZE - (SEGMENT * 2 + 1)))
     {
         //Right
-        if((grid_[gridIdx + SEGMENT] & enemy) && (grid_[gridIdx + SEGMENT * 2]))
-        {
-
-        }
+        eatIdx = gridIdx + SEGMENT;
+        moveIdx = gridIdx + SEGMENT * 2;
+        findMove();
 
         //Left
-        if((grid_[gridIdx + 1 + SEGMENT] & enemy) && (grid_[gridIdx + (1 + SEGMENT) * 2]))
-        {
-            
-        }
+        eatIdx = gridIdx + (1 + SEGMENT);
+        moveIdx = gridIdx + (1 + SEGMENT) * 2;
+        findMove();
     }
+
+    //This is the end of move if we can't eat anymore
+    if(!eaten)
+    {
+        moves_.push_back(Move(startIdx, gridIdx, vEat));
+    }
+    vEat.pop_back();
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& b)

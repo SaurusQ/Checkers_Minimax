@@ -4,24 +4,26 @@
 
 #include <inttypes.h>
 #include <vector>
+#include <algorithm>
 
 #include "definitions.hpp"
 
 class Move
 {
     public:
-        Move(uint8_t start, uint8_t end);
-        Move(uint8_t stat, uint8_t end, uint8_t eatIdx);
-        Move(Move move, uint8_t end, uint8_t eatIdx);
-        void continueMove(uint8_t end, uint8_t eatIdx);
-        void execute(uint8_t* grid);
-        void undo(uint8_t* grid);
+        Move(int start, int end);                               //Constructors
+        Move(int stat, int end, int eatIdx);
+        Move(Move move, int end, int eatIdx);
+        Move(int start, int end, std::vector<int> vEat);
+        void continueMove(int end, int eatIdx);                 //Add one more move to chained eats
+        int execute(int* grid);                                 //Execute this move on grid and return number of eaten enemies
+        int undo(int* grid);                                    //Undo this move on grid and return number of returned enemies
     private:
-        uint8_t start_;
-        uint8_t end_;
+        int start_;                         //Start position of move
+        int end_;                           //End position of move
 
-        std::vector<uint8_t> eatIdxs_;
-        std::vector<uint8_t> eatPieces_;
+        std::vector<int> eatIdxs_;          //All indexes in a grid where pieci is removed
+        std::vector<int> eatPieces_;        //Storage for pieces that were eaten
 };
 
 #endif

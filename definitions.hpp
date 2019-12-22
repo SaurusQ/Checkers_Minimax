@@ -20,10 +20,11 @@ enum Piece
     BLOCKED     = 8  //1000
 };
 
-enum Side
+enum EatDir
 {
-    RED,
-    BLACK
+    UP,
+    DOWN,
+    BOTH
 };
 
 #endif

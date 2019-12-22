@@ -13,27 +13,26 @@
 class Board
 {
     public:
-        Board();
+        Board();                                                                //Initializes the board with pieces
         
-        void calculateMoves(int side);
-        unsigned int redAdvantage() { return reds_ - blacks_; };
-        unsigned int blackAdvantage() { return blacks_ - reds_; };
+        void calculateMoves(int side);                                          //Caculates all possible moves for one side
+        unsigned int redAdvantage() { return reds_ - blacks_; };                //How much advantage reds have
+        unsigned int blackAdvantage() { return blacks_ - reds_; };              //How much advantage black have
 
-        friend std::ostream& operator<<(std::ostream& os, const Board& b);
+        friend std::ostream& operator<<(std::ostream& os, const Board& b);      //Print the board to ostream
 
     private:
-        void moveUp(int idx);
-        void moveDown(int idx);
-        bool eatUp(int gridIdx, int enemy, int moveIdx = -1);
-        bool eatDown(int gridIdx, int enemy, int moveIdx = -1);
-        bool eat(int gridIdx, int enemy, int moveIdx = -1);
+        void moveUp(int idx);                                                   //Helper function to calculate non-eat moves and add to the moves list
+        void moveDown(int idx);                                                 //Helper function to calculate non-eat moves and add to the moves list
+        bool eat(int startIdx, int gridIdx, EatDir eatDir,
+            int enemy, std::vector<int> eaten = std::vector<int>());            //Calculate all possible chained eats and add to the moves list
 
         friend class Move;
 
-        unsigned int reds_;
-        unsigned int blacks_;
-        uint8_t grid_[GRID_SIZE];
-        std::vector<Move> moves_;
+        unsigned int reds_;                 //Number of red pieces
+        unsigned int blacks_;               //Number of black pieces
+        uint8_t grid_[GRID_SIZE];           //Grid stored in interesting way
+        std::vector<Move> moves_;           //All possible moves from calculateMoves()
 };
 
 #endif
