@@ -1,21 +1,21 @@
 
 #include "move.hpp"
 
-Move::Move(uint8_t start, uint8_t end)
+Move::Move(int start, int end)
     : start_(start)
     , end_(end)
 {
 
 }
 
-Move::Move(uint8_t start, uint8_t end, uint8_t eatIdx)
+Move::Move(int start, int end, int eatIdx)
     : start_(start)
     , end_(end)
 {
     eatIdxs_.push_back(eatIdx);
 }
 
-Move::Move(Move move, uint8_t end, uint8_t eatIdx)
+Move::Move(Move move, int end, int eatIdx)
     : start_(move.start_)
     , end_(end)
     , eatIdxs_(move.eatIdxs_)
@@ -23,22 +23,40 @@ Move::Move(Move move, uint8_t end, uint8_t eatIdx)
     eatIdxs_.push_back(eatIdx);
 }
 
-void Move::continueMove(uint8_t end, uint8_t eatIdx)
+Move::Move(int start, int end, std::vector<int> vEat)
+    : start_(start)
+    , end_(end)
+    , eatIdxs_(vEat)
 {
-    end_ = end;
-    eatIdxs_.push_back(eatIdx);
+
 }
 
-void Move::execute(uint8_t* grid)
+int Move::execute(int* grid)
 {
     grid[end_] = grid[start_];
     grid[start_] = EMPTY;
-    //TODO Recursive
-}
-void Move::undo(uint8_t* grid)
-{
-    //TODO recursive
 
+    //Eat pices
+    eatPieces_.reserve(eatIdxs_.size());
+    for(auto i : eatIdxs_)
+    {
+        eatPieces_.push_back(grid[i]);
+        grid[i] = EMPTY;
+    }
+
+    return eatIdxs_.size();
+}
+int Move::undo(int* grid)
+{
     grid[start_] = grid[end_];
     grid[end_] = EMPTY;
+
+    //Put back pieces
+    for(int i  = 0; i < eatIdxs_.size(); i++)
+    {
+        grid[i] == eatPieces_[i];
+    }
+    eatPieces_.clear();
+
+    return eatIdxs_.size();
 }
