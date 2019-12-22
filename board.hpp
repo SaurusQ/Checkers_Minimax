@@ -24,9 +24,9 @@ class Board
     private:
         void moveUp(int idx);
         void moveDown(int idx);
-        bool eatUp(int idx, int enemy);
-        bool eatDown(int idx, int enemy);
-        bool eat(int idx, int eneymy);
+        bool eatUp(int gridIdx, int enemy, int moveIdx = -1);
+        bool eatDown(int gridIdx, int enemy, int moveIdx = -1);
+        bool eat(int gridIdx, int enemy, int moveIdx = -1);
 
         friend class Move;
 

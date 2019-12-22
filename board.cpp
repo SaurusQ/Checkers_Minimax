@@ -48,7 +48,7 @@ void Board::calculateMoves(int side)
                     this->moveDown(i);
                 }
             }
-            else if(grid_[i] & IS_RED)       //Red pawns
+            else if(grid_[i] & IS_RED)      //Red pawns
             {
                 if(!this->eatUp(i, enemy))
                 {
@@ -85,71 +85,81 @@ void Board::moveDown(int idx)
         moves_.emplace_back(Move(idx, idx + 1 + SEGMENT));
 }
 
-bool Board::eatUp(int idx, int enemy)
+bool Board::eatUp(int gridIdx, int enemy, int moveIdx)
 {
     //Can't eat up
-    if(idx < SEGMENT * 2 + 1) return false;
+    if(gridIdx < SEGMENT * 2 + 1) return false;
+    
+    bool retVal = false;
 
     //Right
-    if((grid_[idx - SEGMENT] & enemy) && (grid_[idx - SEGMENT * 2]))
+    if((grid_[gridIdx - SEGMENT] & enemy) && (grid_[gridIdx - SEGMENT * 2]))
     {
-
+        if(moveIdx == -1) moves_.emplace_back(Move(gridIdx, gridIdx - SEGMENT * 2, gridIdx - SEGMENT));
+        else moves_[moveIdx].continueMove(gridIdx - SEGMENT * 2, gridIdx - SEGMENT);
+        this->eatUp(gridIdx - SEGMENT * 2, enemy, moves_.size - 1);
+        retVal = true;
     }
 
     //Left
-    if((grid_[idx - 1 - SEGMENT] & enemy) && (grid_[idx - (1 + SEGMENT) * 2]))
+    if((grid_[gridIdx - 1 - SEGMENT] & enemy) && (grid_[gridIdx - (1 + SEGMENT) * 2]))
     {
-
+        //TODO indexes
+        if(moveIdx == -1 && !retVal) moves_.emplace_back(Move(gridIdx, gridIdx - SEGMENT * 2, gridIdx - SEGMENT));
+        else moves_[moveIdx].continueMove(gridIdx - SEGMENT * 2, gridIdx - SEGMENT);
+        this->eatUp(gridIdx - SEGMENT * 2, enemy, moves_.size - 1);
+        retVal = true;
     }
+    return retVal;
 }
 
-bool Board::eatDown(int idx, int enemy)
+bool Board::eatDown(int gridIdx, int enemy, int moveIdx)
 {
     //Can't eat down
-    if(idx > GRID_SIZE - (SEGMENT * 2 + 1)) return false;
+    if(gridIdx > GRID_SIZE - (SEGMENT * 2 + 1)) return false;
  
     //Right
-    if((grid_[idx + SEGMENT] & enemy) && (grid_[idx + SEGMENT * 2]))
+    if((grid_[gridIdx + SEGMENT] & enemy) && (grid_[gridIdx + SEGMENT * 2]))
     {
 
     }
 
     //Left
-    if((grid_[idx + 1 + SEGMENT] & enemy) && (grid_[idx + (1 + SEGMENT) * 2]))
+    if((grid_[gridIdx + 1 + SEGMENT] & enemy) && (grid_[gridIdx + (1 + SEGMENT) * 2]))
     {
         
     }
 }
 
-bool Board::eat(int idx, int enemy)
+bool Board::eat(int gridIdx, int enemy, int moveIdx)
 {
     //Up
-    if(idx < SEGMENT * 2 + 1)
+    if(gridIdx < SEGMENT * 2 + 1)
     {
         //Right
-        if((grid_[idx - SEGMENT] & enemy) && (grid_[idx - SEGMENT * 2]))
+        if((grid_[gridIdx - SEGMENT] & enemy) && (grid_[gridIdx - SEGMENT * 2]))
         {
 
         }
 
         //Left
-        if((grid_[idx - 1 - SEGMENT] & enemy) && (grid_[idx - (1 + SEGMENT) * 2]))
+        if((grid_[gridIdx - 1 - SEGMENT] & enemy) && (grid_[gridIdx - (1 + SEGMENT) * 2]))
         {
 
         }
     }
 
     //Down
-    if(idx > GRID_SIZE - (SEGMENT * 2 + 1))
+    if(gridIdx > GRID_SIZE - (SEGMENT * 2 + 1))
     {
         //Right
-        if((grid_[idx + SEGMENT] & enemy) && (grid_[idx + SEGMENT * 2]))
+        if((grid_[gridIdx + SEGMENT] & enemy) && (grid_[gridIdx + SEGMENT * 2]))
         {
 
         }
 
         //Left
-        if((grid_[idx + 1 + SEGMENT] & enemy) && (grid_[idx + (1 + SEGMENT) * 2]))
+        if((grid_[gridIdx + 1 + SEGMENT] & enemy) && (grid_[gridIdx + (1 + SEGMENT) * 2]))
         {
             
         }
