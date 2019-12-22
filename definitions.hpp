@@ -20,4 +20,10 @@ enum Piece
     BLOCKED     = 8  //1000
 };
 
+enum Side
+{
+    RED,
+    BLACK
+};
+
 #endif

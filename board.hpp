@@ -15,7 +15,7 @@ class Board
     public:
         Board();
         
-        void calculateMoves(bool red);
+        void calculateMoves(int side);
         unsigned int redAdvantage() { return reds_ - blacks_; };
         unsigned int blackAdvantage() { return blacks_ - reds_; };
 
@@ -24,6 +24,9 @@ class Board
     private:
         void moveUp(int idx);
         void moveDown(int idx);
+        bool eatUp(int idx, int enemy);
+        bool eatDown(int idx, int enemy);
+        bool eat(int idx, int eneymy);
 
         friend class Move;
 
