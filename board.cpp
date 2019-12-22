@@ -26,23 +26,34 @@ Board::Board()
 
 void Board::calculateMoves(int side)
 {
+    int enemy = (side == IS_BLACK) ? IS_RED : IS_BLACK;
+
     for(int i = 0; i < GRID_SIZE; i++)
     {
         //Calculate moves only for pieces on one side
         if(grid_[i] & side)
         {
-            if((grid_[i] & IS_KING) && !this->eat(i, side))             //Kings
+            if(grid_[i] & IS_KING)          //Kings
             {
-                this->moveUp(i);
-                this->moveDown(i);
+                if(!this->eat(i, enemy))
+                {
+                    this->moveUp(i);
+                    this->moveDown(i);
+                }
             }
-            else if((grid_[i] & IS_BLACK) && !this->eatDown(i, side))   //Black pawns
+            else if(grid_[i] & IS_BLACK)    //Black pawns
             {
-                this->moveDown(i);
+                if(!this->eatDown(i, enemy))
+                {
+                    this->moveDown(i);
+                }
             }
-            else if((grid_[i]) && !this->eatUp(i, side))                //Red pawns
+            else if(grid_[i] & IS_RED)       //Red pawns
             {
-                this->moveUp(i);
+                if(!this->eatUp(i, enemy))
+                {
+                    this->moveUp(i);
+                }
             }
         }
     }
@@ -76,6 +87,7 @@ void Board::moveDown(int idx)
 
 bool Board::eatUp(int idx, int enemy)
 {
+    //Can't eat up
     if(idx < SEGMENT * 2 + 1) return false;
 
     //Right
@@ -93,6 +105,7 @@ bool Board::eatUp(int idx, int enemy)
 
 bool Board::eatDown(int idx, int enemy)
 {
+    //Can't eat down
     if(idx > GRID_SIZE - (SEGMENT * 2 + 1)) return false;
  
     //Right
