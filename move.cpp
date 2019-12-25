@@ -60,3 +60,9 @@ int Move::undo(int* grid)
 
     return eatIdxs_.size();
 }
+
+std::ostream& operator<<(std::ostream& os, const Move& b)
+{
+    os << "Move: s: " << b.start_ << " e: " << b.end_ << std::endl;
+    return os;
+}

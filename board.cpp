@@ -134,11 +134,13 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
     }
 
     //This is the end of move if we can't eat anymore
-    if(!eaten)
+    if(!eaten && vEat.size() > 0)
     {
         moves_.push_back(Move(startIdx, gridIdx, vEat));
     }
     vEat.pop_back();
+
+    return eaten;
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& b)

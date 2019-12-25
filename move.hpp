@@ -2,9 +2,9 @@
 #ifndef MOVE_HPP
 #define MOVE_HPP
 
-#include <inttypes.h>
 #include <vector>
 #include <algorithm>
+#include <ostream>
 
 #include "definitions.hpp"
 
@@ -18,6 +18,9 @@ class Move
         void continueMove(int end, int eatIdx);                 //Add one more move to chained eats
         int execute(int* grid);                                 //Execute this move on grid and return number of eaten enemies
         int undo(int* grid);                                    //Undo this move on grid and return number of returned enemies
+
+        friend std::ostream& operator<<(std::ostream& os, const Move& b);
+
     private:
         int start_;                         //Start position of move
         int end_;                           //End position of move

@@ -21,17 +21,19 @@ class Board
 
         friend std::ostream& operator<<(std::ostream& os, const Board& b);      //Print the board to ostream
 
+        std::vector<Move> getMoves() { return moves_; };
+        int* getGrid() { return grid_; };
     private:
         void moveUp(int idx);                                                   //Helper function to calculate non-eat moves and add to the moves list
         void moveDown(int idx);                                                 //Helper function to calculate non-eat moves and add to the moves list
         bool eat(int startIdx, int gridIdx, EatDir eatDir,
-            int enemy, std::vector<int> eaten = std::vector<int>());            //Calculate all possible chained eats and add to the moves list
+        int enemy, std::vector<int> eaten = std::vector<int>());                //Calculate all possible chained eats and add to the moves list
 
         friend class Move;
 
         unsigned int reds_;                 //Number of red pieces
         unsigned int blacks_;               //Number of black pieces
-        uint8_t grid_[GRID_SIZE];           //Grid stored in interesting way
+        int grid_[GRID_SIZE];           //Grid stored in interesting way
         std::vector<Move> moves_;           //All possible moves from calculateMoves()
 };
 
