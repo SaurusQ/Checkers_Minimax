@@ -63,6 +63,11 @@ int Move::undo(grid_t* grid)
 
 std::ostream& operator<<(std::ostream& os, const Move& b)
 {
-    os << "Move: s: " << b.start_ << " e: " << b.end_ << std::endl;
+    os << "Move: s: " << b.start_ << " e: " << b.end_ << " eat:";
+    for(auto idx : b.eatIdxs_)
+    {
+        os << " " << idx;
+    }
+    os << std::endl;
     return os;
 }

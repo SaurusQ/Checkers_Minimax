@@ -19,6 +19,9 @@ class Move
         int execute(grid_t* grid);                                 //Execute this move on grid and return number of eaten enemies
         int undo(grid_t* grid);                                    //Undo this move on grid and return number of returned enemies
 
+        int getStart() { return start_; }
+        int getEnd() { return end_; }
+
         friend std::ostream& operator<<(std::ostream& os, const Move& b);
 
     private:

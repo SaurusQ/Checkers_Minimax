@@ -56,7 +56,6 @@ Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
                 //Set blocks
                 if(idx % (BOARD_SIZE + 1) == SEGMENT)
                 {
-                    std::cout << "Blocking: " << idx << std::endl;
                     grid_[idx] = BLOCKED;
                     idx++;
                 }
@@ -144,11 +143,12 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
     auto findMove = [&]()
     {
         if((grid_[eatIdx] & enemy)
-            && (grid_[moveIdx] == EMPTY)
+            && (grid_[moveIdx] == EMPTY || moveIdx == startIdx) //Kings can visit starting position while eating
             && (eatDir != BOTH || std::find(vEat.begin(), vEat.end(), eatIdx) == vEat.end()))
         {       //We don't need to check old movements if the piece can move on only one direction
             vEat.push_back(eatIdx);
             this->eat(startIdx, moveIdx, eatDir, enemy, vEat);
+            vEat.pop_back();
             eaten = true;
         }
     };
@@ -188,7 +188,7 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
     {
         moves_.push_back(Move(startIdx, gridIdx, vEat));
     }
-    vEat.pop_back();
+    
 
     return eaten;
 }
