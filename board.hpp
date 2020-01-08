@@ -6,6 +6,7 @@
 #include <vector>
 #include <ostream>
 #include <cstring>
+#include <iostream>
 
 #include "move.hpp"
 #include "definitions.hpp"

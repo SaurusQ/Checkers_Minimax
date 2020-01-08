@@ -54,8 +54,9 @@ Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
                 }
                 idx++;
                 //Set blocks
-                if((j + i) % SEGMENT == (SEGMENT / 2))
+                if(idx % (BOARD_SIZE + 1) == SEGMENT)
                 {
+                    std::cout << "Blocking: " << idx << std::endl;
                     grid_[idx] = BLOCKED;
                     idx++;
                 }
@@ -71,7 +72,7 @@ bool Board::gameOver()
 
 void Board::calculateMoves(int side)
 {
-    int enemy = (side == IS_BLACK) ? IS_RED : IS_BLACK;
+    int enemy = swapSide(side);
 
     //Empty moves for recalculation
     moves_.clear();
@@ -154,7 +155,7 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
 
     //Up
     if((eatDir == UP || eatDir == BOTH)
-        && (gridIdx < SEGMENT * 2 + 1))
+        && (gridIdx > SEGMENT * 2 + 1))
     {
         //Right
         eatIdx = gridIdx - SEGMENT;
@@ -169,7 +170,7 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
 
     //Down
     if((eatDir == DOWN || eatDir == BOTH)
-        && (gridIdx > GRID_SIZE - (SEGMENT * 2 + 1)))
+        && (gridIdx < GRID_SIZE - (SEGMENT * 2 + 1)))
     {
         //Right
         eatIdx = gridIdx + SEGMENT;
