@@ -37,15 +37,15 @@ int Move::execute(grid_t* grid)
     grid[start_] = EMPTY;
 
     //Eat pices
-    eatPieces_.reserve(eatIdxs_.size());
     for(auto i : eatIdxs_)
     {
-        eatPieces_.push_back(grid[i]);
         grid[i] = EMPTY;
     }
 
     return eatIdxs_.size();
 }
+
+/*
 int Move::undo(grid_t* grid)
 {
     grid[start_] = grid[end_];
@@ -60,6 +60,7 @@ int Move::undo(grid_t* grid)
 
     return eatIdxs_.size();
 }
+*/
 
 std::ostream& operator<<(std::ostream& os, const Move& b)
 {
