@@ -10,6 +10,7 @@ int main()
 {
     unitTest();
 
+    /*
     Board board;
     std::cout << board;
     board.calculateMoves(IS_BLACK);
@@ -27,7 +28,7 @@ int main()
         move.undo(board.getGrid());
         std::cout << board;
     }
-
+    */
     while(1){}
     return 0;
 }
