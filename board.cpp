@@ -24,6 +24,11 @@ Board::Board()
     }
 }
 
+bool Board::gameOver()
+{
+    return (reds_ == 0 || blacks_ == 0) || (moves_.size() == 0);
+}
+
 void Board::calculateMoves(int side)
 {
     int enemy = (side == IS_BLACK) ? IS_RED : IS_BLACK;

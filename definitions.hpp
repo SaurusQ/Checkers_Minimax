@@ -10,6 +10,8 @@
 #define IS_BLACK 0x01
 #define IS_KING  0x04
 
+#define swapSide(s) s == IS_BLACK ? IS_RED : IS_BLACK
+
 enum Piece
 {
     EMPTY       = 0, //0000
