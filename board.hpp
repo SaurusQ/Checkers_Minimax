@@ -14,7 +14,7 @@ class Board
 {
     public:
         Board();
-        Board(grid_t** grid);
+        Board(grid_t grid[BOARD_SIZE][BOARD_SIZE]);
         
         void calculateMoves(int side);                                          //Caculates all possible moves for one side
         unsigned int redAdvantage() { return reds_ - blacks_; };                //How much advantage reds have

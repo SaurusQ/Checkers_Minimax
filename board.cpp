@@ -24,7 +24,7 @@ Board::Board()
     }
 }
 
-Board::Board(grid_t** grid)
+Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
     : reds_(0)
     , blacks_(0)
 {

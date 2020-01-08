@@ -8,6 +8,8 @@ extern bool unitTest();
 
 int main()
 {
+    unitTest();
+
     Board board;
     std::cout << board;
     board.calculateMoves(IS_BLACK);
