@@ -2,6 +2,8 @@
 #ifndef DEFINITIONS_HPP
 #define DEFINITIONS_HPP
 
+#define DEF_NEW_MOVES_SIZE 10
+
 #define BOARD_SIZE  8
 #define SEGMENT     BOARD_SIZE / 2
 #define GRID_SIZE   BOARD_SIZE * BOARD_SIZE / 2 + SEGMENT
@@ -11,6 +13,8 @@
 #define IS_KING  0x04
 
 #define swapSide(s) s == IS_BLACK ? IS_RED : IS_BLACK
+
+typedef uint8_t grid_t;
 
 enum Piece
 {
