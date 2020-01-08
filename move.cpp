@@ -31,7 +31,7 @@ Move::Move(int start, int end, std::vector<int> vEat)
 
 }
 
-int Move::execute(int* grid)
+int Move::execute(grid_t* grid)
 {
     grid[end_] = grid[start_];
     grid[start_] = EMPTY;
@@ -46,7 +46,7 @@ int Move::execute(int* grid)
 
     return eatIdxs_.size();
 }
-int Move::undo(int* grid)
+int Move::undo(grid_t* grid)
 {
     grid[start_] = grid[end_];
     grid[end_] = EMPTY;

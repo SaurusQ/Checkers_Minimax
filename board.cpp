@@ -24,6 +24,46 @@ Board::Board()
     }
 }
 
+Board::Board(grid_t** grid)
+    : reds_(0)
+    , blacks_(0)
+{
+    //Set board completely empty
+    std::memset(grid_, 0, sizeof(grid_) * sizeof(grid_[0]));
+
+    //Iterate over the array and copy it to the game arrays
+    int idx = 0;
+    for(int i = 0; i < BOARD_SIZE; i++)
+    {
+        for(int j = 0; j < BOARD_SIZE; j++)
+        {
+            if((j + i) % 2 == 0)
+            {
+                switch(grid[i][j])
+                {
+                    case 3:
+                        grid_[idx] |= IS_KING;
+                    case 1:
+                        grid_[idx] |= IS_BLACK;
+                        break;
+                    case 4:
+                        grid_[idx] |= IS_KING;
+                    case 2:
+                        grid_[idx] |= IS_RED;
+                        break;
+                }
+                idx++;
+                //Set blocks
+                if((j + i) % SEGMENT == (SEGMENT / 2))
+                {
+                    grid_[idx] = BLOCKED;
+                    idx++;
+                }
+            }
+        }
+    }
+}
+
 bool Board::gameOver()
 {
     return (reds_ == 0 || blacks_ == 0) || (moves_.size() == 0);
@@ -32,6 +72,10 @@ bool Board::gameOver()
 void Board::calculateMoves(int side)
 {
     int enemy = (side == IS_BLACK) ? IS_RED : IS_BLACK;
+
+    //Empty moves for recalculation
+    moves_.clear();
+    moves_.reserve(DEF_NEW_MOVES_SIZE);
 
     for(int i = 0; i < GRID_SIZE; i++)
     {

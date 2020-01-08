@@ -4,6 +4,8 @@
 
 #include "board.hpp"
 
+extern bool unitTest();
+
 int main()
 {
     Board board;
