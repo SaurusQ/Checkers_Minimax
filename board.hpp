@@ -18,6 +18,7 @@ class Board
         void calculateMoves(int side);                                          //Caculates all possible moves for one side
         unsigned int redAdvantage() { return reds_ - blacks_; };                //How much advantage reds have
         unsigned int blackAdvantage() { return blacks_ - reds_; };              //How much advantage black have
+        bool gameOver();                                                        //Return if the game has ended
 
         friend std::ostream& operator<<(std::ostream& os, const Board& b);      //Print the board to ostream
 
