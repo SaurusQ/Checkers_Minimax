@@ -60,6 +60,10 @@
         "xlocnum": "cpp",
         "xstring": "cpp",
         "xmemory0": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "xhash": "cpp",
+        "xtree": "cpp"
     }
 }

@@ -5,7 +5,7 @@
 
 bool unitTest()
 {
-    /*{
+    {
         std::cout << "Test 1" << std::endl;
 
         grid_t grid[8][8] = {
@@ -120,7 +120,7 @@ bool unitTest()
         }
         if(test.getMoves().size() != 0) return false;
     }
-*/
+
     {
         std::cout << "Test 5" << std::endl;
 
@@ -142,6 +142,7 @@ bool unitTest()
         test.calculateMoves(IS_BLACK);
         for(auto move : test.getMoves())
         {
+            if(move.getEnd() != 0 && move.getEnd() != 30) return false;
             std::cout << move;
         }
     }

@@ -1,10 +1,14 @@
 
+#include <thread>
+
 #include "simulation.hpp"
 
 Simulation::Simulation()
     : board_()
 {
-
+    unsigned int cores = std::thread::hardware_concurrency();
+    if(cores == 0) cores_ = 8;
+    else cores_ = cores;
 }
 
 void Simulation::run(int side)
@@ -17,7 +21,8 @@ void Simulation::run(int side)
     }
 }
 
-void Simulation::step(int side)
+SimBrute::SimBrute()
+    : Simulation()
 {
-    
+
 }

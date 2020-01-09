@@ -45,11 +45,13 @@ Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
                         grid_[idx] |= IS_KING;
                     case 1:
                         grid_[idx] |= IS_BLACK;
+                        blacks_++;
                         break;
                     case 4:
                         grid_[idx] |= IS_KING;
                     case 2:
                         grid_[idx] |= IS_RED;
+                        reds_++;
                         break;
                 }
                 idx++;
@@ -62,6 +64,14 @@ Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
             }
         }
     }
+}
+
+Board::Board(Board* pBoard, Move& move)
+    : reds_(pBoard->reds_)
+    , blacks_(pBoard->blacks_)
+{
+    std::memcpy(grid_, pBoard->grid_, sizeof(grid_) / sizeof(grid_[0]));
+    move.execute(grid_);
 }
 
 bool Board::gameOver()
@@ -77,8 +87,14 @@ void Board::calculateMoves(int side)
     moves_.clear();
     moves_.reserve(DEF_NEW_MOVES_SIZE);
 
+    blacks_ = 0;
+    reds_ = 0;
+
     for(int i = 0; i < GRID_SIZE; i++)
     {
+        //Update totals
+        if(grid_[i] & IS_BLACK) blacks_++;
+        else if(grid_[i] & IS_RED) reds_++;
         //Calculate moves only for pieces on one side
         if(grid_[i] & side)
         {
