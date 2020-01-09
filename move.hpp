@@ -15,11 +15,10 @@ class Move
         Move(int stat, int end, int eatIdx);
         Move(Move move, int end, int eatIdx);
         Move(int start, int end, std::vector<int> vEat);
-        void continueMove(int end, int eatIdx);                 //Add one more move to chained eats
-        int execute(grid_t* grid);                              //Execute this move on grid and return number of eaten enemies
-
-        int getStart() { return start_; }
-        int getEnd() { return end_; }
+        void execute(grid_t* grid);                             //Execute this move on grid and return number of eaten enemies
+        
+        int getStart() const { return start_; }
+        int getEnd() const { return end_; }
 
         friend std::ostream& operator<<(std::ostream& os, const Move& b);
 

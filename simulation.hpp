@@ -13,8 +13,15 @@ class Simulation
         virtual void step(int side);
 
     private:
+        unsigned int cores_;
         Board board_;
 };
 
+class SimBrute : Simulation
+{
+    public:
+        SimBrute();
+        virtual void step();
+};
 
 #endif
