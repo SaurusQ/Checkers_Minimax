@@ -3,6 +3,7 @@
 #define DEFINITIONS_HPP
 
 #define DEF_NEW_MOVES_SIZE 10
+#define SOLVER_DEPTH 5
 
 #define BOARD_SIZE  8
 #define SEGMENT     BOARD_SIZE / 2

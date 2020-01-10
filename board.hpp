@@ -39,7 +39,7 @@ class Board
         unsigned int reds_;                 //Number of red pieces
         unsigned int blacks_;               //Number of black pieces
         grid_t grid_[GRID_SIZE];            //Grid stored in interesting way
-        std::vector<Move> moves_;           //All possible moves from calculateMoves()
+        std::vector<Move> moves_;           //All possible moves from calculateMoves
 };
 
 #endif
