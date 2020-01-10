@@ -1,6 +1,9 @@
 
 #include "solver.hpp"
 
+std::random_device rd;
+std::mt19937 rng(rd());
+
 Solver::Solver(unsigned int depth)
     : depth_(depth)
 {
@@ -12,6 +15,7 @@ Solver::Solver(unsigned int depth)
 Move MiniMax::evaluateBestMove(Board& board, int side)
 {
     board.calculateMoves(side);
+    heuristicMaxSide_ = side;
     side = swapSide(side);
 
     //Store threads for minMax
@@ -25,7 +29,7 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
         //Create new board and execute move
         pBoards.emplace_back(Board(&board, *it));
         //Start new async operation
-        asyncThreads.emplace_back(std::async(std::launch::async, Simulation::minMax, pBranchedSimulation, player, SIMULATION_DEPTH, true, 0x80000000, 0x7FFFFFFF));
+        asyncThreads.emplace_back(std::async(std::launch::async, this->algorithm, board, depth_, side, false));
     }
     
     //Collect minMax info here
@@ -66,12 +70,12 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
     }
 
     //Shuffle for randomness in games
-    std::random_shuffle(equallyBestMoves.begin(), equallyBestMoves.end());
+    std::shuffle(equallyBestMoves.begin(), equallyBestMoves.end(), rng);
 
     //debug print
     for(auto it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
     {
-        std::cout << "key: " << it->first << " move: ";
+        std::cout << "key: " << it->first << " ";
         std::cout << it->second;
     }
     std::cout << "found: " << equallyBestMoves.size() << " equally good moves\n"; 
@@ -83,28 +87,34 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
 int MiniMax::algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer)
 {
     int value;
-    board.calculateMoves(side);
     if(depth = 0 || board.gameOver())
     {
-        if(board.gameOver())
-        {
-            if(maximizingPlayer) return std::numeric_limits<int>::min();
-            else return std::numeric_limits<int>::max();
-        }
+        board.getHeuristicValue(heuristicMaxSide_);
+    }
+    board.calculateMoves(side);
+    if(board.gameOver()) //Failed because side in turn has no possible moves left
+    {
+        if(maximizingPlayer) return std::numeric_limits<int>::min();
+        else return std::numeric_limits<int>::max();
     }
 
-    if(maximizingPlayer)
+
+    if(maximizingPlayer) //Maximizing palyer
     {
         value = std::numeric_limits<int>::min();
         for(auto& move : board.getMoves())
         {
-
+            value = std::max(value, MiniMax::algorithm(Board(&board, move), depth - 1, swapSide(side), false));
         }
 
     }
-    else
+    else                //Minimizing player
     {
         value = std::numeric_limits<int>::max();
+        for(auto& move : board.getMoves())
+        {
+            value = std::min(value, MiniMax::algorithm(Board(&board, move), depth - 1, swapSide(side), true));
+        }
     }
     return value;
 }

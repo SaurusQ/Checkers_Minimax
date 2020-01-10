@@ -15,7 +15,7 @@ class Move
         Move(int stat, int end, int eatIdx);
         Move(Move move, int end, int eatIdx);
         Move(int start, int end, std::vector<int> vEat);
-        void execute(grid_t* grid);                             //Execute this move on grid and return number of eaten enemies
+        int execute(grid_t* grid);                             //Execute this move on grid and return number of eaten enemies
         
         int getStart() const { return start_; }
         int getEnd() const { return end_; }

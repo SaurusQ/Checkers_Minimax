@@ -8,6 +8,7 @@
 #include <map>
 #include <limits>
 #include <algorithm>
+#include <random>
 
 #include "move.hpp"
 #include "board.hpp"
@@ -22,6 +23,7 @@ class Solver
     protected:
         unsigned int cores_;
         unsigned int depth_;
+        int heuristicMaxSide_;
 };
 
 class MiniMax : public Solver
