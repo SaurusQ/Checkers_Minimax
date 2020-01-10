@@ -1,7 +1,8 @@
 
 #include "solver.hpp"
 
-Solver::Solver()
+Solver::Solver(unsigned int depth)
+    : depth_(depth)
 {
     unsigned int cores = std::thread::hardware_concurrency();
     if(cores = 0) cores_ = 8;
@@ -30,9 +31,9 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
     //Collect minMax info here
     std::vector<int> movesValue;
 
-    for (auto& element : asyncThreads) 
+    for (auto& thread : asyncThreads) 
     {
-        movesValue.push_back(element.get());
+        movesValue.push_back(thread.get());
     }
     
     //All threads have been ended -> free memory
@@ -43,39 +44,67 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
 
     //Multimap to store key(int) and result(Move)
     std::multimap<int, Move> mappedMoves;
-    if(movesValue.size() != playerMoves.size())
+    if(movesValue.size() != moves.size())
     {
         throw std::length_error("wrong sized vectors when evaluating best move");
     }
     for (size_t i = 0; i < movesValue.size(); i++)
     {
-        mappedMoves.insert(std::pair<int, Move>(movesValue[i], playerMoves[i]));
+        mappedMoves.insert(std::pair<int, Move>(movesValue[i], moves[i]));
     }
     
     std::vector<Move> equallyBestMoves;
-    int bestVal = 0x80000000;//Biggest neg val
+    int bestVal = std::numeric_limits<int>::min();
 
-    for(std::multimap<int, Move>::reverse_iterator it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
+    for(auto it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
     {
 
-        if(bestVal > (*it).first)
+        if(bestVal > it->first)
             break;
-        equallyBestMoves.push_back((*it).second);
-        bestVal = std::max(bestVal, (*it).first);
+        equallyBestMoves.push_back(it->second);
+        bestVal = std::max(bestVal, it->first);
     }
 
     //Shuffle for randomness in games
     std::random_shuffle(equallyBestMoves.begin(), equallyBestMoves.end());
 
     //debug print
-    for(std::multimap<int, Move>::reverse_iterator it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
+    for(auto it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
     {
-        std::cout << "key: " << (*it).first << " move: ";
-        (*it).second.printMove();
+        std::cout << "key: " << it->first << " move: ";
+        std::cout << it->second;
     }
     std::cout << "found: " << equallyBestMoves.size() << " equally good moves\n"; 
     //debug print
 
     return equallyBestMoves[0];//This is the best move!
+}
 
+int MiniMax::algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer)
+{
+    int value;
+    board.calculateMoves(side);
+    if(depth = 0 || board.gameOver())
+    {
+        if(board.gameOver())
+        {
+            if(maximizingPlayer) return std::numeric_limits<int>::min();
+            else return std::numeric_limits<int>::max();
+        }
+    }
+
+    if(maximizingPlayer)
+    {
+        value = std::numeric_limits<int>::min();
+        for(auto& move : board.getMoves())
+        {
+
+        }
+
+    }
+    else
+    {
+        value = std::numeric_limits<int>::max();
+    }
+    return value;
 }
