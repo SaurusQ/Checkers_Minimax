@@ -31,7 +31,7 @@ Move::Move(int start, int end, std::vector<int> vEat)
 
 }
 
-void Move::execute(grid_t* grid)
+int Move::execute(grid_t* grid)
 {
     grid[end_] = grid[start_];
     grid[start_] = EMPTY;
@@ -41,6 +41,8 @@ void Move::execute(grid_t* grid)
     {
         grid[i] = EMPTY;
     }
+    //Return how many pieces were eaten
+    return eatIdxs_.size();
 }
 
 /*

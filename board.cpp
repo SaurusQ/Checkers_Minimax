@@ -71,12 +71,29 @@ Board::Board(Board* pBoard, Move& move)
     , blacks_(pBoard->blacks_)
 {
     std::memcpy(grid_, pBoard->grid_, sizeof(grid_) / sizeof(grid_[0]));
-    move.execute(grid_);
+    this->executeMove(move);
 }
 
 bool Board::gameOver()
 {
-    return (reds_ == 0 || blacks_ == 0) || (moves_.size() == 0);
+    return (reds_ == 0 || blacks_ == 0) || (movesCalculated_ && moves_.size() == 0);
+}
+
+int Board::getHeuristicValue(int side)
+{
+    if(IS_BLACK & side)
+    {
+        if(blacks_ == 0) return std::numeric_limits<int>::min();
+        if(reds_ == 0) return std::numeric_limits<int>::max();
+        return blacks_ - reds_;
+    }
+    else
+    {
+        if(blacks_ == 0) return std::numeric_limits<int>::max();
+        if(reds_ == 0) return std::numeric_limits<int>::min();
+        return reds_ - blacks_;
+    }
+    
 }
 
 void Board::calculateMoves(int side)
@@ -122,6 +139,16 @@ void Board::calculateMoves(int side)
             }
         }
     }
+    movesCalculated_ = true;
+}
+
+void Board::executeMove(Move move)
+{
+    movesCalculated_ = false;
+    if(grid_[move.getStart()] & IS_BLACK)
+        blacks_ -= move.execute(grid_);
+    else
+        reds_ -= move.execute(grid_);
 }
 
 void Board::moveUp(int idx)
