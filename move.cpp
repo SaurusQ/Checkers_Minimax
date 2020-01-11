@@ -34,7 +34,7 @@ Move::Move(int start, int end, std::vector<int> vEat)
 int Move::execute(grid_t* grid)
 {
     if(end_ < SEGMENT || end_ >= GRID_SIZE - SEGMENT)
-        grid[end_] = grid[start_] & IS_KING; //Make king if the piece arrives at the other end
+        grid[end_] = grid[start_] | IS_KING; //Make king if the piece arrives at the other end
     else
         grid[end_] = grid[start_];
     

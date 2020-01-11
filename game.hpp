@@ -22,6 +22,7 @@ class Game
         Game(Solver* pSolver, GameType type);
         void nextTurn();
         void printBoard() {std::cout << board_; };
+        bool over();
     private:
         void playerTurn(int side);
         void cpuTurn(int side);
