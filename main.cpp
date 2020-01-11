@@ -13,7 +13,7 @@ int main()
 {
     MiniMax* pMiniMax = new MiniMax;
     Game game(pMiniMax, GameType::CPU_VS_CPU);
-    while(1)
+    while(!game.over())
     {   
         game.nextTurn();
         game.printBoard();

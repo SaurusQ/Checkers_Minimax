@@ -35,3 +35,8 @@ void Game::cpuTurn(int side)
     board_.executeMove(move);
     std::cout << "CPU executing: " << move << std::endl;
 }
+
+bool Game::over()
+{
+    return board_.gameOver();
+}
