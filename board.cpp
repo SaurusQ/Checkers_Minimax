@@ -99,13 +99,11 @@ int Board::getHeuristicValue(int side)
 void Board::calculateMoves(int side)
 {
     int enemy = swapSide(side);
+    bool forceEat = false;
 
     //Empty moves for recalculation
     moves_.clear();
     moves_.reserve(DEF_NEW_MOVES_SIZE);
-
-    blacks_ = 0;
-    reds_ = 0;
 
     for(int i = 0; i < GRID_SIZE; i++)
     {
@@ -114,28 +112,42 @@ void Board::calculateMoves(int side)
         {
             if(grid_[i] & IS_KING)          //Kings
             {
-                if(!this->eat(i, i, BOTH, enemy))
-                {
-                    this->moveUp(i);
-                    this->moveDown(i);
-                }
+                forceEat |= this->eat(i, i, BOTH, enemy);
             }
             else if(grid_[i] & IS_BLACK)    //Black pawns
             {
-                if(!this->eat(i, i, DOWN, enemy))
-                {
-                    this->moveDown(i);
-                }
+                forceEat |= this->eat(i, i, DOWN, enemy);
             }
             else if(grid_[i] & IS_RED)      //Red pawns
             {
-                if(!this->eat(i, i, UP, enemy))
+                forceEat |= this->eat(i, i, UP, enemy);
+            }
+        }
+    }
+    if(!forceEat)
+    {
+        for(int i = 0; i < GRID_SIZE; i++)
+        {
+            //Calculate moves only for pieces on one side
+            if(grid_[i] & side)
+            {
+                if(grid_[i] & IS_KING)          //Kings
                 {
-                    this->moveUp(i);
+                        this->moveUp(i);
+                        this->moveDown(i);
+                }
+                else if(grid_[i] & IS_BLACK)    //Black pawns
+                {
+                        this->moveDown(i);
+                }
+                else if(grid_[i] & IS_RED)      //Red pawns
+                {
+                        this->moveUp(i);
                 }
             }
         }
     }
+    
     movesCalculated_ = true;
 }
 
@@ -229,7 +241,6 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
         moves_.push_back(Move(startIdx, gridIdx, vEat));
     }
     
-
     return eaten;
 }
 
