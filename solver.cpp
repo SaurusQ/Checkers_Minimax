@@ -15,7 +15,7 @@ Solver::Solver(unsigned int depth)
 Move MiniMax::evaluateBestMove(Board& board, int side)
 {
     board.calculateMoves(side);
-    heuristicMaxSide_ = side;
+    heuristicMaxSide_ = swapSide(side);
     side = swapSide(side);
 
     //Store threads for minMax
