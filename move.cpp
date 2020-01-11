@@ -69,6 +69,5 @@ std::ostream& operator<<(std::ostream& os, const Move& b)
     {
         os << " " << idx;
     }
-    os << std::endl;
     return os;
 }
