@@ -109,9 +109,6 @@ void Board::calculateMoves(int side)
 
     for(int i = 0; i < GRID_SIZE; i++)
     {
-        //Update totals
-        if(grid_[i] & IS_BLACK) blacks_++;
-        else if(grid_[i] & IS_RED) reds_++;
         //Calculate moves only for pieces on one side
         if(grid_[i] & side)
         {
