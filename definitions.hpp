@@ -13,7 +13,7 @@
 #define IS_BLACK 0x01
 #define IS_KING  0x04
 
-#define swapSide(s) s == IS_BLACK ? IS_RED : IS_BLACK
+#define swapSide(s) (s == IS_BLACK ? IS_RED : IS_BLACK)
 
 typedef uint8_t grid_t;
 

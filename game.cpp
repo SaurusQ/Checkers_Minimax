@@ -26,7 +26,22 @@ void Game::nextTurn()
 
 void Game::playerTurn(int side)
 {
-
+    board_.calculateMoves(side);
+    auto moves = board_.getMoves();
+    std::cout << "Possible moves: (select index)" << std::endl;
+    int i = 0;
+    for(auto move : moves)
+    {
+        std::cout << i << ": " << move << std::endl;
+        i++;
+    }
+    int idx;
+    do
+    {
+        std::cin >> idx;
+    } while(idx < 0 && idx >= moves.size());
+    std::cout << "Player executing: " << moves[idx] << std::endl;
+    board_.executeMove(moves[idx]);
 }
 
 void Game::cpuTurn(int side)
