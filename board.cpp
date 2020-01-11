@@ -149,28 +149,22 @@ void Board::executeMove(Move move)
 }
 
 void Board::moveUp(int idx)
-{
-    //Can't move any more up
-    if(idx < SEGMENT) return;
-    
+{ 
     //Right
-    if(grid_[idx - SEGMENT] == EMPTY)
+    if((idx >= SEGMENT) && (grid_[idx - SEGMENT] == EMPTY))
         moves_.emplace_back(Move(idx, idx - SEGMENT));
     //Left
-    if(grid_[idx - 1 - SEGMENT] == EMPTY)
+    if((idx > SEGMENT) && (grid_[idx - 1 - SEGMENT] == EMPTY))
         moves_.emplace_back(Move(idx, idx - 1 - SEGMENT));
 }
 
 void Board::moveDown(int idx)
 {
-    //Can't move any more down
-    if(idx > GRID_SIZE - SEGMENT) return;
-
     //Left
-    if(grid_[idx + SEGMENT] == EMPTY)
+    if((idx < GRID_SIZE - SEGMENT) && (grid_[idx + SEGMENT] == EMPTY))
         moves_.emplace_back(Move(idx, idx + SEGMENT));
     //Right
-    if(grid_[idx + 1 + SEGMENT] == EMPTY)
+    if((idx < GRID_SIZE - SEGMENT - 1) && (grid_[idx + 1 + SEGMENT] == EMPTY))
         moves_.emplace_back(Move(idx, idx + 1 + SEGMENT));
 }
 
