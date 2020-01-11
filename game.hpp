@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "board.hpp"
+#include "move.hpp"
 #include "solver.hpp"
 
 enum GameType
@@ -18,11 +19,17 @@ enum GameType
 class Game
 {
     public:
-        Game(Solver solver, GameType type);
+        Game(Solver* pSolver, GameType type);
         void nextTurn();
+        void printBoard() {std::cout << board_; };
     private:
+        void playerTurn(int side);
+        void cpuTurn(int side);
+
         Board board_;
-        Solver solver_;
+        Solver* pSolver_;
+        GameType type_;
+        int nextSide_ = IS_BLACK;       //Black side allways starts first
 };
 
 

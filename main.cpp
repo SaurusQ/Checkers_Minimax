@@ -2,12 +2,25 @@
 #include <iostream>
 #include <thread>
 
+#include "solver.hpp"
+#include "game.hpp"
+
 #include "board.hpp"
 
 extern bool unitTest();
 
 int main()
 {
+    MiniMax* pMiniMax = new MiniMax;
+    Game game(pMiniMax, GameType::CPU_VS_CPU);
+    while(1)
+    {   
+        game.nextTurn();
+        game.printBoard();
+    }
+    delete pMiniMax;
+
+
     unitTest();
 
     /*

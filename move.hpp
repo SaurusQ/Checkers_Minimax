@@ -26,7 +26,7 @@ class Move
         int start_;                         //Start position of move
         int end_;                           //End position of move
 
-        std::vector<int> eatIdxs_;          //All indexes in a grid where pieci is removed
+        std::vector<int> eatIdxs_;          //All indexes in a grid where piece is removed
 };
 
 #endif
