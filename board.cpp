@@ -207,7 +207,7 @@ bool Board::eat(int startIdx, int gridIdx, EatDir eatDir, int enemy, std::vector
 
     //Up
     if((eatDir == UP || eatDir == BOTH)
-        && (gridIdx > SEGMENT * 2 + 1))
+        && (gridIdx >= SEGMENT * 2 + 1))
     {
         //Right
         eatIdx = gridIdx - SEGMENT;
