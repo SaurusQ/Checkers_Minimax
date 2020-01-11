@@ -164,7 +164,7 @@ void Board::moveUp(int idx)
 void Board::moveDown(int idx)
 {
     //Can't move any more down
-    if(idx > GRID_SIZE - SEGMENT) return;
+    if(idx >= GRID_SIZE - SEGMENT) return;
 
     //Left
     if(grid_[idx + SEGMENT] == EMPTY)
