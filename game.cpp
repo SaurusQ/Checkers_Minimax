@@ -24,6 +24,12 @@ void Game::nextTurn()
     nextSide_ = swapSide(nextSide_);
 }
 
+void Game::reset()
+{
+    nextSide_ = IS_BLACK;
+    board_ = Board();
+}
+
 void Game::playerTurn(int side)
 {
     board_.calculateMoves(side);
