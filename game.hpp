@@ -21,8 +21,11 @@ class Game
     public:
         Game(Solver* pSolver, GameType type);
         void nextTurn();
-        void printBoard() {std::cout << board_; };
+        void reset();
         bool over();
+        void setSolver(Solver* pSolver) { pSolver_ = pSolver; }
+        void setType(GameType type) { type_ = type; }
+        void printBoard() {std::cout << board_; };
     private:
         void playerTurn(int side);
         void cpuTurn(int side);
