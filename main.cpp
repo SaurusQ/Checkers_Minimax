@@ -11,14 +11,14 @@ extern bool unitTest();
 
 int main()
 {
-    MiniMax* pMiniMax = new MiniMaxAB(8);
-    Game game(pMiniMax, GameType::PLAYER_VS_CPU);
+    Solver* pSolver = new MiniMaxAB(8);
+    Game game(pSolver, GameType::PLAYER_VS_CPU);
     while(!game.over())
     {   
         game.nextTurn();
         game.printBoard();
     }
-    delete pMiniMax;
+    delete pSolver;
 
 
     //unitTest();
