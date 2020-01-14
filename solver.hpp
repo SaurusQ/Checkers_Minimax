@@ -38,20 +38,20 @@ class MiniMax : public Solver
     public:
         MiniMax(unsigned int depth = SOLVER_DEPTH) : Solver(depth) {}
         virtual ~MiniMax() {}
-        Move evaluateBestMove(Board& board, int side);
+        virtual Move evaluateBestMove(Board& board, int side);
     protected:
         virtual int algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer);
 };
 
-class MiniMaxAB : public MiniMax
+class MiniMaxAB : public Solver
 {
     public:
-        MiniMaxAB(unsigned int depth = SOLVER_DEPTH) : MiniMax(depth) {}
+        MiniMaxAB(unsigned int depth = SOLVER_DEPTH) : Solver(depth) {}
         virtual ~MiniMaxAB() {}
     protected:
-        int algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer) = 0;
-        virtual int algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer,
-            int a = std::numeric_limits<int>::min(), int b = std::numeric_limits<int>::max());
+        virtual Move evaluateBestMove(Board& board, int side);
+        virtual int algorithm(Board board, unsigned int depth, int side,
+            bool maximizingPlayer, int alpha, int beta);
 };
 
 #endif
