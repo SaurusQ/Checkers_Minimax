@@ -11,7 +11,7 @@ extern bool unitTest();
 
 int main()
 {
-    MiniMax* pMiniMax = new MiniMax(8);
+    MiniMax* pMiniMax = new MiniMaxAB(8);
     Game game(pMiniMax, GameType::PLAYER_VS_CPU);
     while(!game.over())
     {   

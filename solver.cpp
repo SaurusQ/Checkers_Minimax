@@ -12,6 +12,35 @@ Solver::Solver(unsigned int depth)
     else cores_ = cores;
 }
 
+Move Solver::selectBestMove(std::multimap<int, Move>& keyedMoves)
+{
+    std::vector<Move> equallyBestMoves;
+    int bestVal = std::numeric_limits<int>::min();
+
+    for(auto it = keyedMoves.rbegin(); it != keyedMoves.rend(); it++)
+    {
+
+        if(bestVal > it->first)
+            break;
+        equallyBestMoves.push_back(it->second);
+        bestVal = std::max(bestVal, it->first);
+    }
+
+    //Shuffle for randomness in games
+    std::shuffle(equallyBestMoves.begin(), equallyBestMoves.end(), rng);
+
+    //debug print
+    for(auto it = keyedMoves.rbegin(); it != keyedMoves.rend(); it++)
+    {
+        std::cout << "key: " << it->first << " ";
+        std::cout << it->second << std::endl;
+    }
+    std::cout << "found: " << equallyBestMoves.size() << " equally good moves\n"; 
+    //debug print
+
+    return equallyBestMoves[0];//This is the best move!
+}
+
 Move MiniMax::evaluateBestMove(Board& board, int side)
 {
     board.calculateMoves(side);
@@ -51,31 +80,7 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
         mappedMoves.insert(std::pair<int, Move>(movesValue[i], moves[i]));
     }
     
-    std::vector<Move> equallyBestMoves;
-    int bestVal = std::numeric_limits<int>::min();
-
-    for(auto it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
-    {
-
-        if(bestVal > it->first)
-            break;
-        equallyBestMoves.push_back(it->second);
-        bestVal = std::max(bestVal, it->first);
-    }
-
-    //Shuffle for randomness in games
-    std::shuffle(equallyBestMoves.begin(), equallyBestMoves.end(), rng);
-
-    //debug print
-    for(auto it = mappedMoves.rbegin(); it != mappedMoves.rend(); it++)
-    {
-        std::cout << "key: " << it->first << " ";
-        std::cout << it->second << std::endl;
-    }
-    std::cout << "found: " << equallyBestMoves.size() << " equally good moves\n"; 
-    //debug print
-
-    return equallyBestMoves[0];//This is the best move!
+    return this->selectBestMove(mappedMoves);
 }
 
 int MiniMax::algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer)
@@ -108,6 +113,47 @@ int MiniMax::algorithm(Board board, unsigned int depth, int side, bool maximizin
         for(auto& move : board.getMoves())
         {
             value = std::min(value, this->algorithm(Board(&board, move), depth - 1, swapSide(side), true));
+        }
+    }
+    return value;
+}
+
+int MiniMaxAB::algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer, int alpha, int beta)
+{
+    int value;
+    if(depth == 0 || board.gameOver())
+    {
+        return board.getHeuristicValue(heuristicMaxSide_);
+    }
+    board.calculateMoves(side);
+    if(board.gameOver()) //Failed because side in turn has no possible moves left
+    {
+        if(maximizingPlayer) return std::numeric_limits<int>::min();
+        else return std::numeric_limits<int>::max();
+    }
+
+
+    if(maximizingPlayer) //Maximizing palyer
+    {
+        value = std::numeric_limits<int>::min();
+        for(auto& move : board.getMoves())
+        {
+            value = std::max(value, this->algorithm(Board(&board, move), depth - 1, swapSide(side), false));
+            alpha = std::max(alpha, value);
+            if(alpha >= beta)
+                break; //Beta cut-off
+        }
+
+    }
+    else                //Minimizing player
+    {
+        value = std::numeric_limits<int>::max();
+        for(auto& move : board.getMoves())
+        {
+            value = std::min(value, this->algorithm(Board(&board, move), depth - 1, swapSide(side), true));
+            beta = std::min(beta, value);
+            if(alpha >= beta)
+                break; //Alpha cut-off
         }
     }
     return value;
