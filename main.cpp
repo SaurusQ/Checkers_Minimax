@@ -11,8 +11,8 @@ extern bool unitTest();
 
 int main()
 {
-    Solver* pSolver = new MiniMaxAB(8);
-    Game game(pSolver, GameType::PLAYER_VS_CPU);
+    Solver* pSolver = new MiniMaxAB(10);
+    Game game(pSolver, GameType::CPU_VS_CPU);
     while(!game.over())
     {   
         game.nextTurn();

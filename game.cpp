@@ -45,7 +45,7 @@ void Game::playerTurn(int side)
     do
     {
         std::cin >> idx;
-    } while(idx < 0 && idx >= moves.size());
+    } while(idx < 0 || idx >= moves.size());
     std::cout << "Player executing: " << moves[idx] << std::endl;
     board_.executeMove(moves[idx]);
 }
