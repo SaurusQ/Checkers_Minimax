@@ -41,7 +41,7 @@ Move Solver::selectBestMove(std::multimap<int, Move>& keyedMoves)
     return equallyBestMoves[0];//This is the best move!
 }
 
-Move MiniMax::evaluateBestMove(Board& board, int side)
+Move MiniMax::evaluateBestMove(Board& board, int side, bool multiCore)
 {
     board.calculateMoves(side);
     heuristicMaxSide_ = swapSide(side);
@@ -51,30 +51,39 @@ Move MiniMax::evaluateBestMove(Board& board, int side)
     std::vector<std::future<int>> asyncThreads;
     //Store board for all simulations
     std::vector<Board> boards;
+    //Collect minMax info here
+    std::vector<int> movesValue;
 
     auto moves = board.getMoves();
     for(auto it = moves.begin(); it < moves.end(); it++)
     {
         //Create new board and execute move
         boards.emplace_back(Board(&board, *it));
-        //Start new async operation
-        asyncThreads.emplace_back(std::async(std::launch::async, &MiniMax::algorithm, 
-            this, boards.back(), depth_, side, false));
+        if(multiCore)
+        {
+            //Start new async operation
+            asyncThreads.emplace_back(std::async(std::launch::async, &MiniMax::algorithm, 
+                this, boards.back(), depth_, side, false));
+        }
+        else
+        {
+            movesValue.push_back(this->algorithm(boards.back(), depth_, side, false));
+        }
     }
-    
-    //Collect minMax info here
-    std::vector<int> movesValue;
 
-    for (auto& thread : asyncThreads) 
+    if(multiCore)
     {
-        movesValue.push_back(thread.get());
+        for (auto& thread : asyncThreads) 
+        {
+            movesValue.push_back(thread.get());
+        }
     }
 
     //Multimap to store key(int) and result(Move)
     std::multimap<int, Move> mappedMoves;
     if(movesValue.size() != moves.size())
     {
-        throw std::length_error("wrong sized vectors when evaluating best move");
+        throw std::length_error("Incorrectly sized vectors when evaluating best move");
     }
     for (size_t i = 0; i < movesValue.size(); i++)
     {
@@ -119,7 +128,7 @@ int MiniMax::algorithm(Board board, unsigned int depth, int side, bool maximizin
     return value;
 }
 
-Move MiniMaxAB::evaluateBestMove(Board& board, int side)
+Move MiniMaxAB::evaluateBestMove(Board& board, int side, bool multiCore)
 {
     board.calculateMoves(side);
     heuristicMaxSide_ = swapSide(side);
@@ -129,24 +138,34 @@ Move MiniMaxAB::evaluateBestMove(Board& board, int side)
     std::vector<std::future<int>> asyncThreads;
     //Store board for all simulations
     std::vector<Board> boards;
+    //Collect minMax info here
+    std::vector<int> movesValue;
 
     auto moves = board.getMoves();
     for(auto it = moves.begin(); it < moves.end(); it++)
     {
         //Create new board and execute move
         boards.emplace_back(Board(&board, *it));
-        //Start new async operation
-        asyncThreads.emplace_back(std::async(std::launch::async, &MiniMaxAB::algorithm, 
-            this, boards.back(), depth_, side, false,
-            std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));
+        if(multiCore)
+        {
+            //Start new async operation
+            asyncThreads.emplace_back(std::async(std::launch::async, &MiniMaxAB::algorithm, 
+                this, boards.back(), depth_, side, false,
+                std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));
+        }
+        else
+        {
+            movesValue.push_back(this->algorithm(boards.back(), depth_, side, false,
+                std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));
+        }
     }
     
-    //Collect minMax info here
-    std::vector<int> movesValue;
-
-    for (auto& thread : asyncThreads) 
+    if(multiCore)
     {
-        movesValue.push_back(thread.get());
+        for (auto& thread : asyncThreads) 
+        {
+            movesValue.push_back(thread.get());
+        }
     }
 
     //Multimap to store key(int) and result(Move)

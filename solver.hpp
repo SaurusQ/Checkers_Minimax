@@ -25,8 +25,7 @@ class Solver
         void setDepth(unsigned int depth) { depth_ = depth; }
         unsigned int getNumCores() const { return cores_; }
         unsigned int getDepth() const { return depth_; }
-
-        virtual Move evaluateBestMove(Board& board, int side) = 0;
+        virtual Move evaluateBestMove(Board& board, int side, bool multiCore = true) = 0;
     protected:
         unsigned int cores_;
         unsigned int depth_;
@@ -38,7 +37,7 @@ class MiniMax : public Solver
     public:
         MiniMax(unsigned int depth = SOLVER_DEPTH) : Solver(depth) {}
         virtual ~MiniMax() {}
-        virtual Move evaluateBestMove(Board& board, int side);
+        virtual Move evaluateBestMove(Board& board, int side, bool multiCore = true);
     protected:
         virtual int algorithm(Board board, unsigned int depth, int side, bool maximizingPlayer);
 };
@@ -48,8 +47,8 @@ class MiniMaxAB : public Solver
     public:
         MiniMaxAB(unsigned int depth = SOLVER_DEPTH) : Solver(depth) {}
         virtual ~MiniMaxAB() {}
+        virtual Move evaluateBestMove(Board& board, int side, bool multiCore = true);
     protected:
-        virtual Move evaluateBestMove(Board& board, int side);
         virtual int algorithm(Board board, unsigned int depth, int side,
             bool maximizingPlayer, int alpha, int beta);
 };
