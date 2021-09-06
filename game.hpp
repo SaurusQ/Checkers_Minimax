@@ -25,7 +25,7 @@ class Game
         bool over();
         void setSolver(Solver* pSolver) { pSolver_ = pSolver; }
         void setType(GameType type) { type_ = type; }
-        void printBoard() {std::cout << board_; };
+        void printBoard() { std::cout << board_; };
     private:
         void playerTurn(int side);
         void cpuTurn(int side);

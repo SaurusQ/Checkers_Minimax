@@ -1,4 +1,7 @@
 
+#ifndef UNIT_TEST
+#ifndef BENCHMARK
+
 #include <iostream>
 #include <thread>
 
@@ -6,8 +9,6 @@
 #include "game.hpp"
 
 #include "board.hpp"
-
-extern bool unitTest();
 
 int main()
 {
@@ -19,9 +20,6 @@ int main()
         game.printBoard();
     }
     delete pSolver;
-
-
-    //unitTest();
 
     /*
     Board board;
@@ -45,3 +43,6 @@ int main()
     while(1){}
     return 0;
 }
+
+#endif
+#endif

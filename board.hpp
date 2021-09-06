@@ -17,7 +17,7 @@ class Board
     public:
         Board();
         Board(grid_t grid[BOARD_SIZE][BOARD_SIZE]);
-        Board(Board* pBoard, Move& move);                                        //Create new board from old board and execute move on new board
+        Board(Board* pBoard, Move& move);                                       //Create new board from old board and execute move on new board
         
         bool gameOver();                                                        //Return if the game has ended, takes moves into account if calculate moves hasbeen called
         int getHeuristicValue(int side);                                        //Returns the heuristic value of the board based on the side
