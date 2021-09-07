@@ -12,6 +12,7 @@
 #define IS_RED   0x02
 #define IS_BLACK 0x01
 #define IS_KING  0x04
+#define IS_PIECE (IS_RED | IS_BLACK)
 
 #define swapSide(s) (s == IS_BLACK ? IS_RED : IS_BLACK)
 
