@@ -26,7 +26,7 @@ class Board
         unsigned int redAdvantage() const { return reds_ - blacks_; }           //How much advantage reds have
         unsigned int blackAdvantage() const { return blacks_ - reds_; }         //How much advantage black have
         uint8_t getLocation(int x, int y) const;                                //Get location on board
-        int locationToIndex(int x, int y) const;
+        static int locationToIndex(int x, int y);
 
         friend std::ostream& operator<<(std::ostream& os, const Board& b);      //Print the board to ostream
 

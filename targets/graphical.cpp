@@ -43,6 +43,7 @@ int main()
 
     bool updatePieces = true;
     bool movePiece = false;
+    std::vector<int> eats;
     PieceData* pieceToMove = nullptr;
 
     while (window.isOpen())
@@ -83,16 +84,29 @@ int main()
                 {
                     int x = mousePos.x / RECTANGLE_SIZE;
                     int y = mousePos.y / RECTANGLE_SIZE;
-                    switch(game.tryMove(pieceToMove->x, pieceToMove->y, x, y))
+                    
+                    // check if something was eaten
+                    int disx = std::abs(x - pieceToMove->x);
+                    int disy = std::abs(y - pieceToMove->y);
+                    if(disx == 2 && disy == 2)
+                    {
+                        int eatx = (x + pieceToMove->x) / 2;
+                        int eaty = (x + pieceToMove->y) / 2;
+                        eats.push_back(Board::locationToIndex(eatx, eaty));
+                    }
+
+                    switch(game.tryMove(pieceToMove->x, pieceToMove->y, x, y, eats))
                     {
                         case MoveLegality::LEGAL:
                             updatePieces = true;
+                            eats.clear();
                             break;
                         case MoveLegality::PARTIAL:
                             pieceToMove->shape.setPosition(x * RECTANGLE_SIZE + PIECE_OFFSET, y * RECTANGLE_SIZE + PIECE_OFFSET);
                             break;
                         case MoveLegality::ILLEGAL: // Fallthrough
                         case MoveLegality::NOTHING:
+                            eats.clear();
                             pieceToMove->shape.setPosition(pieceToMove->x * RECTANGLE_SIZE + PIECE_OFFSET, pieceToMove->y * RECTANGLE_SIZE + PIECE_OFFSET);
                             break;
                     }

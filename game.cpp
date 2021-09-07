@@ -62,7 +62,7 @@ bool Game::over()
     return board_.gameOver();
 }
 
-MoveLegality Game::tryMove(int x1, int y1, int x2, int y2)
+MoveLegality Game::tryMove(int x1, int y1, int x2, int y2, std::vector<int> eats)
 {
     int idx1 = board_.locationToIndex(x1, y1);
     int idx2 = board_.locationToIndex(x2, y2);
@@ -71,18 +71,27 @@ MoveLegality Game::tryMove(int x1, int y1, int x2, int y2)
     if(!board_.isCalculated()) board_.calculateMoves(nextSide_);
     auto& moves = board_.getMoves();
 
+    // check is we need to eat this time
+    if((moves[0].getEats().size() == 0) 
+        != (eats.size() == 0))
+    {
+        return MoveLegality::ILLEGAL;
+    }
+
     for(auto& m : moves)
     {
         if(m.getStart() != idx1) continue;
+        if(m.getEats().size() < eats.size()) continue;
+        for(int i = 0; i < eats.size(); i++)
+        {
+            if(m.getEats()[i] != eats[i]) continue;   
+        }
+        if(m.getEats().size() != eats.size()) return MoveLegality::PARTIAL;
         if(m.getEnd() == idx2)
         {
             board_.executeMove(m);
             nextSide_ = swapSide(nextSide_);
             return MoveLegality::LEGAL;
-        }
-        for(auto& i : m.getEats())
-        {
-            if(i == idx2) return MoveLegality::PARTIAL;
         }
     }
     return MoveLegality::ILLEGAL;
