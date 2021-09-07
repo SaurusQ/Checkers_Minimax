@@ -31,7 +31,7 @@ class Game
         void nextTurn();
         void reset();
         bool over();
-        MoveLegality tryMove(int x1, int y1, int x2, int y2);
+        MoveLegality tryMove(int x1, int y1, int x2, int y2, std::vector<int> eats);
         void setSolver(Solver* pSolver) { pSolver_ = pSolver; }
         void setType(GameType type) { type_ = type; }
         void printBoard() { std::cout << board_; }

@@ -168,7 +168,7 @@ uint8_t Board::getLocation(int x, int y) const
     return grid_[idx];
 }
 
-int Board::locationToIndex(int x, int y) const
+int Board::locationToIndex(int x, int y)
 {
     if((y + x) % 2) return -1;
 
