@@ -2,6 +2,8 @@
 
 Simple checkers AI with Minimax optimized with alpha-beta pruning.
 
+Includes graphical interface that uses SFML. You need to have SMFL installed
+and paths configured correctly to SFLM in the Makefile.
 
 # CLI Interface
 <pre>

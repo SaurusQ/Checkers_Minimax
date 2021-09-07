@@ -61,3 +61,29 @@ bool Game::over()
 {
     return board_.gameOver();
 }
+
+MoveLegality Game::tryMove(int x1, int y1, int x2, int y2)
+{
+    int idx1 = board_.locationToIndex(x1, y1);
+    int idx2 = board_.locationToIndex(x2, y2);
+    if(idx1 < 0 || idx2 < 0) return MoveLegality::ILLEGAL;
+    if(idx1 == idx2) return MoveLegality::NOTHING;
+    if(!board_.isCalculated()) board_.calculateMoves(nextSide_);
+    auto& moves = board_.getMoves();
+
+    for(auto& m : moves)
+    {
+        if(m.getStart() != idx1) continue;
+        if(m.getEnd() == idx2)
+        {
+            board_.executeMove(m);
+            nextSide_ = swapSide(nextSide_);
+            return MoveLegality::LEGAL;
+        }
+        for(auto& i : m.getEats())
+        {
+            if(i == idx2) return MoveLegality::PARTIAL;
+        }
+    }
+    return MoveLegality::ILLEGAL;
+}

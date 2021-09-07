@@ -1,7 +1,4 @@
 
-#ifndef UNIT_TEST
-#ifndef BENCHMARK
-
 #include <iostream>
 #include <thread>
 
@@ -43,6 +40,3 @@ int main()
     while(1){}
     return 0;
 }
-
-#endif
-#endif

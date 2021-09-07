@@ -17,10 +17,11 @@
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceRoot}",
+                "C:/SFML/include",
                 "C:/msys64/mingw64/include",
-                "C:/msys64/mingw64/include/c++/8.2.1",
-                "C:/msys64/mingw64/include/c++/8.2.1/tr1",
-                "C:/msys64/mingw64/include/c++/8.2.1/x86_64-w64-mingw32",
+                "C:/msys64/mingw64/include/c++/10.2.0",
+                "C:/msys64/mingw64/include/c++/10.2.0/tr1",
+                "C:/msys64/mingw64/include/c++/10.2.0/x86_64-w64-mingw32",
                 "C:/msys64/mingw64/x86_64-w64-mingw32/include"
             ],
             "defines": [
@@ -33,9 +34,9 @@
                 "path": [
                     "C:/msys64/mingw64/lib/*",
                     "C:/msys64/mingw64/include",
-                    "C:/msys64/mingw64/include/c++/7.2.0",
-                    "C:/msys64/mingw64/include/c++/7.2.0/tr1",
-                    "C:/msys64/mingw64/include/c++/7.2.0/x86_64-w64-mingw32",
+                    "C:/msys64/mingw64/include/c++/10.2.0",
+                    "C:/msys64/mingw64/include/c++/10.2.0/tr1",
+                    "C:/msys64/mingw64/include/c++/10.2.0/x86_64-w64-mingw32",
                     "C:/msys64/mingw64/x86_64-w64-mingw32/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
