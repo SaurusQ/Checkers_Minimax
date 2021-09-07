@@ -8,7 +8,7 @@ Board::Board()
     //Set board completely empty
     std::memset(grid_, 0, sizeof(grid_) * sizeof(grid_[0]));
     //Set blacks up
-    for(int i = 0; i < 3 * SEGMENT + 2; i++)
+    for(int i = 0; i < 3 * SEGMENT + 1; i++)
     {
         grid_[i] = BLACK_PAWN;
     }
@@ -66,7 +66,7 @@ Board::Board(grid_t grid[BOARD_SIZE][BOARD_SIZE])
     }
 }
 
-Board::Board(Board* pBoard, Move& move)
+Board::Board(Board* pBoard, const Move& move)
     : reds_(pBoard->reds_)
     , blacks_(pBoard->blacks_)
 {
@@ -151,13 +151,30 @@ void Board::calculateMoves(int side)
     movesCalculated_ = true;
 }
 
-void Board::executeMove(Move move)
+void Board::executeMove(const Move move)
 {
     movesCalculated_ = false;
     if(grid_[move.getStart()] & IS_BLACK)
         blacks_ -= move.execute(grid_);
     else
         reds_ -= move.execute(grid_);
+}
+
+uint8_t Board::getLocation(int x, int y) const 
+{
+    int idx = this->locationToIndex(x, y);
+    if(idx < 0) return BLOCKED;
+
+    return grid_[idx];
+}
+
+int Board::locationToIndex(int x, int y) const
+{
+    if((y + x) % 2) return -1;
+
+    int row = SEGMENT * y + (y + 1) / 2;
+    int col = x / 2;
+    return row + col;
 }
 
 void Board::moveUp(int idx)

@@ -8,12 +8,20 @@
 #include "move.hpp"
 #include "solver.hpp"
 
-enum GameType
+enum class GameType
 {
     CPU_VS_CPU,
     PLAYER_VS_CPU,
     CPU_VS_PLAYER,
     PLAYER_VS_PLAYER
+};
+
+enum class MoveLegality
+{
+    ILLEGAL,
+    LEGAL,
+    PARTIAL,
+    NOTHING
 };
 
 class Game
@@ -23,9 +31,11 @@ class Game
         void nextTurn();
         void reset();
         bool over();
+        MoveLegality tryMove(int x1, int y1, int x2, int y2);
         void setSolver(Solver* pSolver) { pSolver_ = pSolver; }
         void setType(GameType type) { type_ = type; }
-        void printBoard() { std::cout << board_; };
+        void printBoard() { std::cout << board_; }
+        const Board getBoard() { return board_; }
     private:
         void playerTurn(int side);
         void cpuTurn(int side);

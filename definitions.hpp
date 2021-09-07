@@ -6,8 +6,8 @@
 #define SOLVER_DEPTH 5
 
 #define BOARD_SIZE  8
-#define SEGMENT     BOARD_SIZE / 2
-#define GRID_SIZE   BOARD_SIZE * BOARD_SIZE / 2 + SEGMENT
+#define SEGMENT     (BOARD_SIZE / 2)
+#define GRID_SIZE   (BOARD_SIZE * BOARD_SIZE / 2 + SEGMENT)
 
 #define IS_RED   0x02
 #define IS_BLACK 0x01

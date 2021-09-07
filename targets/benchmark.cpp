@@ -1,6 +1,4 @@
 
-#ifdef BENCHMARK
-
 #ifndef BENCHMARK_DEPTH
 #define BENCHMARK_DEPTH 10
 #endif
@@ -37,5 +35,3 @@ int main()
     
     return 0;
 }
-
-#endif

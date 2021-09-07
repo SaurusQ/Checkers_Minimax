@@ -68,6 +68,13 @@
         "iomanip": "cpp",
         "random": "cpp",
         "xlocmon": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "iterator": "cpp",
+        "locale": "cpp",
+        "set": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp"
     }
 }
