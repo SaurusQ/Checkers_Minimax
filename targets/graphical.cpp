@@ -21,7 +21,7 @@ struct PieceData
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(BOARD_GRAPH_SIZE, BOARD_GRAPH_SIZE), "SFML window");
+    sf::RenderWindow window(sf::VideoMode(BOARD_GRAPH_SIZE, BOARD_GRAPH_SIZE), "Checkers MiniMax");
 
     // Board
     sf::RectangleShape blackRectangle(sf::Vector2f(RECTANGLE_SIZE, RECTANGLE_SIZE));
@@ -35,7 +35,7 @@ int main()
     sf::CircleShape redPiece(PIECE_SIZE);
     redPiece.setFillColor(sf::Color::Red);
     
-    auto solver = std::make_unique<MiniMaxAB>(10);
+    auto solver = std::make_unique<MiniMaxAB>(1);
     Game game(solver.get(), GameType::CPU_VS_PLAYER);
 
     std::vector<PieceData> blackPieces(game.getBoard().aliveBlacks(), PieceData{blackPiece, 0, 0});
@@ -45,6 +45,8 @@ int main()
     bool movePiece = false;
     std::vector<int> eats;
     PieceData* pieceToMove = nullptr;
+    int lastEatX = -1;
+    int lastEatY = -1;
 
     while (window.isOpen())
     {
@@ -86,12 +88,19 @@ int main()
                     int y = mousePos.y / RECTANGLE_SIZE;
                     
                     // check if something was eaten
-                    int disx = std::abs(x - pieceToMove->x);
-                    int disy = std::abs(y - pieceToMove->y);
+                    int compx = pieceToMove->x;
+                    int compy = pieceToMove->y;
+                    if(lastEatX >= 0 && lastEatY >= 0)
+                    {
+                        compx = lastEatX;
+                        compy = lastEatY;
+                    }
+                    int disx = std::abs(x - compx);
+                    int disy = std::abs(y - compy);
                     if(disx == 2 && disy == 2)
                     {
-                        int eatx = (x + pieceToMove->x) / 2;
-                        int eaty = (x + pieceToMove->y) / 2;
+                        int eatx = (x + compx) / 2;
+                        int eaty = (y + compy) / 2;
                         eats.push_back(Board::locationToIndex(eatx, eaty));
                     }
 
@@ -100,14 +109,20 @@ int main()
                         case MoveLegality::LEGAL:
                             updatePieces = true;
                             eats.clear();
+                            lastEatX = -1;
+                            lastEatY = -1;
                             break;
                         case MoveLegality::PARTIAL:
                             pieceToMove->shape.setPosition(x * RECTANGLE_SIZE + PIECE_OFFSET, y * RECTANGLE_SIZE + PIECE_OFFSET);
+                            lastEatX = x;
+                            lastEatY = y;
                             break;
                         case MoveLegality::ILLEGAL: // Fallthrough
                         case MoveLegality::NOTHING:
                             eats.clear();
                             pieceToMove->shape.setPosition(pieceToMove->x * RECTANGLE_SIZE + PIECE_OFFSET, pieceToMove->y * RECTANGLE_SIZE + PIECE_OFFSET);
+                            lastEatX = -1;
+                            lastEatY = -1;
                             break;
                     }
 

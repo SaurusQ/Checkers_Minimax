@@ -80,18 +80,26 @@ MoveLegality Game::tryMove(int x1, int y1, int x2, int y2, std::vector<int> eats
 
     for(auto& m : moves)
     {
-        if(m.getStart() != idx1) continue;
-        if(m.getEats().size() < eats.size()) continue;
-        for(int i = 0; i < eats.size(); i++)
+        bool fail = false;
+        if(m.getStart() != idx1) continue;              // must start at the same place
+        if(m.getEats().size() < eats.size()) continue;  // must have less eats than the move
+        for(int i = 0; i < eats.size(); i++)            // if has eats the beginning must be equal
         {
-            if(m.getEats()[i] != eats[i]) continue;   
+            if(m.getEats()[i] != eats[i])
+            {
+                fail = true;
+                break;
+            }
         }
-        if(m.getEats().size() != eats.size()) return MoveLegality::PARTIAL;
-        if(m.getEnd() == idx2)
+        if(!fail)
         {
-            board_.executeMove(m);
-            nextSide_ = swapSide(nextSide_);
-            return MoveLegality::LEGAL;
+            if(m.getEats().size() != eats.size()) return MoveLegality::PARTIAL; // this is partial because the eats are not complete
+            if(m.getEnd() == idx2)                      // must have the same end
+            {
+                board_.executeMove(m);
+                nextSide_ = swapSide(nextSide_);
+                return MoveLegality::LEGAL;
+            }
         }
     }
     return MoveLegality::ILLEGAL;
